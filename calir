@@ -1,0 +1,1 @@
+oc get secret -n quay-enterprise example-registry-clair-config-secret  -o "jsonpath={$.data['config\.yaml']}" | base64 -d > clair-config.yaml
