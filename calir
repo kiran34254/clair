@@ -1,13 +1,32 @@
 oc get secret -n quay-enterprise example-registry-clair-config-secret  -o "jsonpath={$.data['config\.yaml']}" | base64 -d > clair-config.yaml
-DISTRIBUTED_STORAGE_CONFIG:
-  s3Storage:
-    - S3Storage
-    - host: s3store.bank.sbi
-      s3_access_key: FHAHM157NMCPQ5SPBIQ5
-      s3_secret_key: bnk__32QZq__ada4KF8__175uR48qvvc2Dc527bx
-      s3_bucket: cmp2-quay-dr
-      storage_path: /datastorage/registry-cmp
-DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
-DISTRIBUTED_STORAGE_PREFERENCE:
-  - s3Storage
-PREFERRED_URL_SCHEME: https
+auth:
+    psk:
+        iss:
+            - quay
+            - clairctl
+        key: WVJETXRpa2hibjJqVGkxcVRlU2RhRXdJT29FN1RHbFk=
+http_listen_addr: :8080
+indexer:
+    connstring: host=dr-registry-clair-postgres port=5432 dbname=postgres user=postgres password=postgres sslmode=disable pool_max_conns=10
+    layer_scan_concurrency: 5
+    migrations: true
+    scanlock_retry: 10
+log_level: info
+matcher:
+    connstring: host=dr-registry-clair-postgres port=5432 dbname=postgres user=postgres password=postgres sslmode=disable pool_max_conns=10
+    migrations: true
+metrics:
+    name: prometheus
+notifier:
+    connstring: host=dr-registry-clair-postgres port=5432 dbname=postgres user=postgres password=postgres sslmode=disable pool_max_conns=10
+    delivery_interval: 1m0s
+    migrations: true
+    poll_interval: 5m0s
+    webhook:
+        callback: http://dr-registry-clair-app/notifier/api/v1/notifications
+        target: https://dr-registry-quay-quay-enterprise.apps.ocpcmpdr.bank.sbi/secscan/notification
+updaters:
+    config:
+        rhel:
+            ignore_unpatched: true
+
