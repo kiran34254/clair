@@ -1,1 +1,13 @@
 oc get secret -n quay-enterprise example-registry-clair-config-secret  -o "jsonpath={$.data['config\.yaml']}" | base64 -d > clair-config.yaml
+DISTRIBUTED_STORAGE_CONFIG:
+  s3Storage:
+    - S3Storage
+    - host: s3store.bank.sbi
+      s3_access_key: FHAHM157NMCPQ5SPBIQ5
+      s3_secret_key: bnk__32QZq__ada4KF8__175uR48qvvc2Dc527bx
+      s3_bucket: cmp2-quay-dr
+      storage_path: /datastorage/registry-cmp
+DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
+DISTRIBUTED_STORAGE_PREFERENCE:
+  - s3Storage
+PREFERRED_URL_SCHEME: https
